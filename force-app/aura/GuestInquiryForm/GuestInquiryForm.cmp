@@ -1,0 +1,110 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes"
+                access="global" 
+                controller="AttachmentController">
+    
+    <aura:attribute name="newCase" type="Case" default="{ 'Type': 'Question',
+                                                          'Origin':'コミュニティ',
+                                                          'Status':'New',                                                        
+                                                          'SuppliedEmail' : ''},
+                                                          'SuppliedName' : ''},
+                                                          'Subject' : ''},
+                                                          'Description' : ''}"/>
+    <aura:attribute name="documents" type="List" default="[]"/>
+    <aura:attribute name="filenames" type="List" default="[]"/>
+    <aura:attribute name="accept" type="List" default="['.jpg', '.jpeg', '.png', '.gif', '.bmp','.xls','.xlsx','.zip','.lzh']"/>
+    <aura:attribute name="multiple" type="Boolean" default="true"/>
+    <aura:attribute name="disabled" type="Boolean" default="false"/>
+    <aura:attribute name="isComplete" type="Boolean" default="false"/>
+
+	<article class="slds-card slds-m-horizontal_medium ">
+        <div class="slds-grid slds-einstein-header slds-card__header">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-grid slds-grid_vertical-align-center slds-size_3-of-4 slds-medium-size_2-of-3">
+                    <div class="slds-media__body">
+                        <h2 class="slds-truncate" title="Einstein (10+)">                          
+                                <span class="slds-text-heading_small">MKIサポートセンター</span>                            
+                        </h2>
+                    </div>
+                </div>
+                <div class="slds-einstein-header__figure slds-size_1-of-4 slds-medium-size_1-of-3"></div>
+            </header>
+        </div>
+        
+        <aura:if isTrue="{!not(v.isComplete)}">
+            <div class="Create slds-m-horizontal_medium slds-m-top_medium">      
+                <lightning:card class="headerLabel" iconName="action:new_case" title="お問い合わせフォーム">  
+                    <form class="slds-form--stacked">  
+                        <lightning:input aura:id="SuppliedEmail" 
+                                             label="メールアドレス" 
+                                             name="SuppliedEmail"
+                                             value="{!v.newCase.SuppliedEmail}"
+                                             required="true"
+                                             class="input slds-m-horizontal_large slds-m-vertical_medium slds-m-top_x-large"
+                                             maxlength="80"/>
+        
+                        <lightning:input aura:id="SuppliedName" 
+                                             label="氏名" 
+                                             name="SuppliedName"
+                                             value="{!v.newCase.SuppliedName}"
+                                             required="true"
+                                             class="input slds-m-horizontal_large slds-m-vertical_medium"
+                                             maxlength="80"/>
+                     
+                        <lightning:input aura:id="Subject" 
+                                             label="件名" 
+                                             name="Subject"
+                                             value="{!v.newCase.Subject}"
+                                             required="true"
+                                             class="input slds-m-horizontal_large slds-m-vertical_medium"
+                                             maxlength="80"/>
+        
+                         <lightning:textarea aura:id="Description"
+                                             name="Description"
+                                             label="説明"
+                                             value="{!v.newCase.Description}"
+                                             class="input slds-m-horizontal_large slds-m-top_medium"
+                                             required="true"/>
+                        
+                         <div class="input slds-m-horizontal_large">
+                             <lightning:fileUpload name="fileUploader"
+                                             multiple="{!v.multiple}"
+                                             accept="{!v.accept}"
+                                             disabled="{!v.disabled}"
+                                             onuploadfinished="{!c.onUploadFinished }"/>
+                        </div>  
+                        
+                        <aura:iteration items="{!v.filenames}" var="doc">
+                            <p class="slds-m-horizontal_large slds-text-title_bold ">{!doc}</p>
+                        </aura:iteration>
+                        
+                        <div class="slds-m-vertical_large slds-align_absolute-center">
+                        <lightning:button label="登録"
+                                class="communityBtn slds-button custombtn"
+             
+                                          variant="brand"
+                                onclick="{!c.SubmitCase}"/>
+                        </div>
+                    
+                    </form>
+                </lightning:card>
+            </div>
+            
+            <aura:set attribute="else">
+                  <p class="SuccessPanel">
+                    <lightning:card title="" class="SuccessPanel vertical-center">
+                        <div class="slds-list_horizontal slds-align_absolute-center slds-m-bottom_large">
+                            <lightning:icon iconName="utility:success" alternativeText="Success!" variant="Success"
+                                    title="success variant xx-small" size="xx-small" />
+                            <h2 class="slds-text-title_bold">　正常に送信されました</h2>
+                        </div>     
+                        <h2 class = "slds-m-bottom_large">弊社サポートよりご回答申し上げますので、今しばらくお待ち下さい</h2>          
+                        <lightning:button label="閉じる" title="close button"  class="slds-m-left_x-small buttonwide"/>
+                    </lightning:card>
+                </p>
+            </aura:set>          
+        </aura:if>         
+
+        <footer class="slds-card__footer">
+        </footer>
+    </article>   
+</aura:component>
